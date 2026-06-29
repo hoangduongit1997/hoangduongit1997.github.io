@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code finished task, please check\" with title \"Claude Code\"' -e 'beep'"
+          }
+        ]
+      }
+    ]
+  }
+}
