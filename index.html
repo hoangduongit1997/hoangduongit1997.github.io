@@ -432,7 +432,10 @@
       object-fit: cover;
       object-position: top center;
       display: block;
-      border-left: 1px solid var(--line);
+      border-left: 3px solid var(--teal);
+      border-bottom: 3px solid var(--teal);
+      border-bottom-left-radius: var(--radius);
+      box-shadow: 0 0 24px var(--teal-glow);
     }
 
     .hero-info {
@@ -452,10 +455,13 @@
       }
 
       .hero-photo {
-        width: 100%;
-        height: 280px;
-        border-left: none;
-        border-top: 1px solid var(--line);
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        border: 3px solid var(--teal);
+        box-shadow: 0 0 0 4px var(--teal-glow), 0 0 20px var(--teal-glow);
+        align-self: center;
+        margin: 32px 0 0;
         order: -1;
       }
     }
@@ -1169,7 +1175,7 @@
     /* ---------- EDUCATION ---------- */
     .edu-grid {
       display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
     }
 
@@ -1361,7 +1367,7 @@
       .hero          { padding: 40px 0 48px; }
       .hero-info     { padding: 28px 22px; }
       .contact-panel { padding: 28px 20px; }
-      .hero-photo    { height: 320px; object-position: 50% 10%; }
+      .hero-photo    { object-position: 50% 20%; }
       .edu-grid      { grid-template-columns: 1fr 1fr; }
       .edu-card:first-child { grid-column: 1 / -1; }
       .skills-grid   { grid-template-columns: repeat(3, 1fr); }
@@ -1407,7 +1413,6 @@
       section          { padding: 36px 0; }
       .hero            { padding: 20px 0 28px; }
       .hero-info       { padding: 18px 14px; }
-      .hero-photo      { height: 240px; }
       .stat-row        { gap: 8px; margin-bottom: 18px; }
       .stat            { padding: 8px 10px; }
       .stat b          { font-size: 18px; }
@@ -1561,7 +1566,9 @@
             </div>
             <div class="about-fact">
               <span class="about-fact-label">Languages</span>
-              <span class="about-fact-value">Vietnamese (native) · English (professional working proficiency)</span>
+              <span class="about-fact-value">Vietnamese — Native<br>English — Professional working
+                proficiency<br><small style="color:var(--ink-faint)">Read/write technical docs fluently, communicate
+                  effectively in daily work and meetings</small></span>
             </div>
           </div>
         </div>
@@ -1631,6 +1638,8 @@
               <li>Reduced app error rate by <strong style="color:var(--teal)">30%</strong> and improved performance by
                 <strong style="color:var(--teal)">10%</strong>, monitored via Firebase Crashlytics &amp; Analytics.
               </li>
+              <li>Worked within a standard Agile Scrum process — participated in backlog refinement, sprint planning, UAT
+                and retrospectives every sprint.</li>
             </ul>
             <div class="store-row">
               <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.rcPatient" target="_blank"
@@ -1650,7 +1659,8 @@
             <div class="tagrow">
               <span class="tag">Flutter</span><span class="tag">GetX</span><span class="tag">RxDart</span><span
                 class="tag">Firebase</span><span class="tag">Google Maps</span><span class="tag">Codemagic</span><span
-                class="tag">Deeplink</span><span class="tag">InAppWebView</span><span class="tag">Singpass</span>
+                class="tag">Deeplink</span><span class="tag">InAppWebView</span><span class="tag">Singpass</span><span
+                class="tag">Scrum</span>
             </div>
           </div>
         </details>
@@ -1912,6 +1922,13 @@
               Code</span><span class="tag">Picture-in-Picture</span><span class="tag">Video Caching</span>
           </div>
         </div>
+        <div class="skill-cat" style="--skill-accent:var(--purple); --d:540ms">
+          <h3 class="skill-cat-title">Process &amp; Delivery</h3>
+          <div class="tagrow">
+            <span class="tag">Agile</span><span class="tag">Scrum</span><span class="tag">Backlog Refinement</span><span
+              class="tag">Sprint Planning</span><span class="tag">UAT</span><span class="tag">Retrospective</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1919,7 +1936,7 @@
   <section id="education">
     <div class="wrap reveal">
       <p class="eyebrow">Education</p>
-      <h2 class="section-title">Education &amp; Background</h2>
+      <h2 class="section-title">Education</h2>
       <div class="edu-grid">
         <div class="edu-card" style="--d:0ms">
           <h3>HCMC University of Industry and Trade</h3>
@@ -1927,18 +1944,11 @@
           <p class="edu-years">2015 – 2019</p>
         </div>
         <div class="edu-card" style="--d:80ms">
-          <h3>Languages</h3>
-          <ul>
-            <li><strong>Vietnamese</strong> — Native</li>
-            <li><strong>English</strong> — Professional working proficiency<br><small
-                style="color:var(--ink-faint)">Read/write technical docs fluently, communicate effectively in daily work
-                and meetings</small></li>
-          </ul>
-        </div>
-        <div class="edu-card" style="--d:160ms">
-          <h3>Location</h3>
-          <p>Tan Phu, Ho Chi Minh City, Vietnam</p>
-          <p class="edu-years">Open to remote work</p>
+          <h3>Certification</h3>
+          <p class="edu-degree">Flutter Advanced Course - Clean Architecture With MVVM</p>
+          <p class="edu-years">Udemy · <a
+              href="https://www.udemy.com/certificate/UC-6935d6c7-94e3-462d-9e1d-9848565f4b5c/" target="_blank"
+              rel="noopener">View certificate</a></p>
         </div>
       </div>
     </div>
@@ -2037,8 +2047,8 @@
       var navSectionIds = Array.from(links).map(function (l) { return l.getAttribute('href').slice(1); });
 
       function updateActiveNav() {
-        var threshold = window.innerHeight * 0.33;
-        var atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 60;
+        var threshold = 90; // just below the 60px sticky nav bar
+        var atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
         var current = null;
         navSectionIds.forEach(function (id) {
           var el = document.getElementById(id);
