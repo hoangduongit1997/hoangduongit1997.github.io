@@ -54,4 +54,4 @@ resources/
 
 ## Deployment
 
-GitHub Pages from the `main` branch root. Target URL: `https://hoangduongit1997.github.io/portfolio/`
+GitHub Pages from the `main` branch root. Target URL: `https://github.com/hoangduongit1997/hoangduongit1997.github.io.git`

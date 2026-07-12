@@ -3,7 +3,12 @@
     "allow": [
       "Bash(python3 -m http.server 8080)",
       "Bash(echo \"Server started, PID: $!\")",
-      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-sandbox --screenshot=/private/tmp/mobile-430-full.png --window-size=430,5000 --hide-scrollbars http://localhost:8080)"
+      "Bash('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --headless=new --disable-gpu --no-sandbox --screenshot=/private/tmp/mobile-430-full.png --window-size=430,5000 --hide-scrollbars http://localhost:8080)",
+      "Bash(node debug_nav.js)",
+      "Bash(node verify_nav.js)",
+      "Bash(node debug_nav2.js)",
+      "Bash(sed -i '' \"s/window.scrollTo\\(0, document.documentElement.scrollHeight\\)/window.scrollTo\\({top: document.documentElement.scrollHeight, behavior: 'instant'}\\)/\" debug_nav2.js)",
+      "Bash(node debug_nav3.js)"
     ]
   },
   "hooks": {

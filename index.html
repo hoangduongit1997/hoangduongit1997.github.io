@@ -11,8 +11,8 @@
   <meta property="og:description"
     content="7+ years building production Flutter apps. Clean Architecture, Singpass integration, CI/CD.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://hoangduongit1997.github.io/portfolio/">
-  <meta property="og:image" content="https://hoangduongit1997.github.io/portfolio/resources/images/og.svg">
+  <meta property="og:url" content="https://hoangduongit1997.github.io/">
+  <meta property="og:image" content="https://hoangduongit1997.github.io/resources/images/og.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nguyen Minh Hoang Duong — Senior Flutter Developer">
   <meta name="twitter:description"
@@ -61,6 +61,8 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 76px;
+      /* 60px sticky nav + 16px breathing room */
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1368,8 +1370,6 @@
       .hero-info     { padding: 28px 22px; }
       .contact-panel { padding: 28px 20px; }
       .hero-photo    { object-position: 50% 20%; }
-      .edu-grid      { grid-template-columns: 1fr 1fr; }
-      .edu-card:first-child { grid-column: 1 / -1; }
       .skills-grid   { grid-template-columns: repeat(3, 1fr); }
     }
 
@@ -1426,8 +1426,6 @@
       .contact-panel   { padding: 20px 14px; }
       .contact-grid    { grid-template-columns: 1fr; }
       .skills-grid     { grid-template-columns: 1fr; }
-      .edu-grid        { grid-template-columns: 1fr; }
-      .edu-card:first-child { grid-column: auto; }
     }
 
     ::selection {
@@ -1491,8 +1489,8 @@
               </svg>0948 907 687</span>
           </div>
           <div class="stat-row">
-            <div class="stat"><b id="statYears" data-target="5" data-suffix="+" aria-hidden="true">5+</b><span
-                class="sr-only" id="statYearsSr">5+ years experience.</span><span aria-hidden="true">years exp.</span>
+            <div class="stat"><b id="statYears" data-target="7" data-suffix="+" aria-hidden="true">7+</b><span
+                class="sr-only" id="statYearsSr">7+ years experience.</span><span aria-hidden="true">years exp.</span>
             </div>
             <div class="stat"><b data-target="14" data-suffix="+" aria-hidden="true">14+</b><span class="sr-only">14+
                 apps shipped.</span><span aria-hidden="true">apps shipped</span></div>
@@ -1543,7 +1541,7 @@
           <p class="eyebrow">About Me</p>
           <h2 class="section-title">Who I am</h2>
           <blockquote class="about-summary">
-            Senior Flutter Developer with <span id="yearsExpAbout">5+</span> years of experience building, shipping, and
+            Senior Flutter Developer with <span id="yearsExpAbout">7+</span> years of experience building, shipping, and
             maintaining cross-platform mobile apps (iOS &amp; Android) across healthcare, edtech, e-commerce, and
             entertainment. Led app architecture using Clean Architecture, MVVM, OOP, and DDD, and delivered complex
             integrations including Singpass national digital identity, native bridging (Java/Swift), and CI/CD
@@ -2045,8 +2043,15 @@
       /* ---- Active nav tracking ---- */
       var links = document.querySelectorAll('.nav__links a');
       var navSectionIds = Array.from(links).map(function (l) { return l.getAttribute('href').slice(1); });
+      var navSections = navSectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
 
-      function updateActiveNav() {
+      function setActiveNav(id) {
+        links.forEach(function (l) {
+          l.classList.toggle('active', l.getAttribute('href').slice(1) === id);
+        });
+      }
+
+      function updateActiveNavLegacy() {
         var threshold = 90; // just below the 60px sticky nav bar
         var atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
         var current = null;
@@ -2056,13 +2061,8 @@
           if (el.getBoundingClientRect().top <= threshold) current = id;
         });
         if (atBottom) current = navSectionIds[navSectionIds.length - 1];
-        links.forEach(function (l) {
-          var id = l.getAttribute('href').slice(1);
-          l.classList.toggle('active', id === current);
-        });
+        setActiveNav(current);
       }
-      window.addEventListener('scroll', updateActiveNav, { passive: true });
-      updateActiveNav();
 
       if ('IntersectionObserver' in window) {
 
@@ -2099,8 +2099,54 @@
           }, { threshold: 0.5 });
           statObs.observe(statRow);
         }
+
+        /* ---- Active nav tracking (scroll-spy) ----
+           Detection band is a thin strip just below the sticky nav: a fixed
+           pixel offset for the nav's real height (not a guessed threshold),
+           plus a percentage bottom margin so the band's thickness scales
+           with viewport height instead of going stale on resize (no need to
+           recreate the observer). Thin on purpose — a wide band lets a tall
+           section and the short section after it intersect simultaneously,
+           which made the wrong (later) link win; a thin line under the nav
+           only two sections can straddle for an instant while scrolling.
+
+           Both the observer callback and the scroll listener funnel through
+           one refreshActive() function instead of writing lastActive
+           independently — two separate writers raced in an earlier version
+           (whichever fired last won), which is what caused the flip-flopping
+           highlight near the bottom of the page. */
+        var navEl = document.querySelector('.nav__inner');
+        var navH = navEl ? navEl.offsetHeight : 60;
+        var visibleSections = new Set();
+        var lastActive = null;
+
+        function computeActive() {
+          var atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
+          if (atBottom) return navSectionIds[navSectionIds.length - 1];
+          var deepest = null;
+          navSections.forEach(function (el) { if (visibleSections.has(el.id)) deepest = el.id; });
+          return deepest !== null ? deepest : lastActive;
+        }
+
+        function refreshActive() {
+          lastActive = computeActive();
+          setActiveNav(lastActive);
+        }
+
+        var navObs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) visibleSections.add(entry.target.id);
+            else visibleSections.delete(entry.target.id);
+          });
+          refreshActive();
+        }, { rootMargin: '-' + navH + 'px 0px -90% 0px', threshold: 0 });
+        navSections.forEach(function (el) { navObs.observe(el); });
+
+        window.addEventListener('scroll', refreshActive, { passive: true });
       } else {
         document.querySelectorAll('.reveal').forEach(function (r) { r.classList.add('in'); });
+        window.addEventListener('scroll', updateActiveNavLegacy, { passive: true });
+        updateActiveNavLegacy();
       }
 
       /* ---- Typing animation for hero role ---- */
